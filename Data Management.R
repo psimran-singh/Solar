@@ -7,9 +7,9 @@ library(tidyverse)
 project_sunroof_county <- read.csv("Solar Data Files/project-sunroof-county.csv")
 pop_by_race <- read.csv("Solar Data Files/StatsAmerica Datasets/Population-by-Race/Population by Race - US, States, Counties.csv")
 pop_by_age_sex <- read.csv("Solar Data Files/StatsAmerica Datasets/Population-by-Age-and-Sex/Population by Age and Sex - US, States, Counties.csv")
-apred <- read.csv("Solar Data Files/StatsAmerica Datasets/APRED/APRED - Disaster Resilience - Counties.csv")
+apred0 <- read.csv("Solar Data Files/StatsAmerica Datasets/APRED/APRED - Disaster Resilience - Counties.csv")
 
-###LIMIT ALL DATASETS TO SELECT STATES###
+###LIMIT ALL DATASETS TO SELECT STATES AND YEARS###
 northeast_sunroof <- subset(project_sunroof_county,
   project_sunroof_county$state_name=="New York" |
   project_sunroof_county$state_name=="Pennsylvania" |
@@ -42,7 +42,7 @@ pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(',
 
 pop_demographics <- merge(pop_by_age_sex3,pop_by_race3)
 
-apred2 <- subset(apred,
+apred2 <- subset(apred0,
                  apred$Year=="2019",
                  select=c(1:11))
 
@@ -68,8 +68,14 @@ northeast_sunroof <- northeast_sunroof[c(26,1,25,2:24)]
 pop_demographics <- pop_demographics[c(4:25)]
 
 
+###ADDITIONAL TRANSFORMATIONS###
+#Create percentages for demographic data
+pop_dem_pct <- pop_demographics
+pop_dem_pct[, -(1:3)] <- sweep(pop_dem_pct[, -(1:3)], 1, pop_dem_pct[, 3], "/")
+
+
 
 rm(pop_by_age_sex,pop_by_age_sex2,pop_by_age_sex3)
 rm(pop_by_race,pop_by_race2,pop_by_race3)
 rm(project_sunroof_county)
-rm(apred,apred2)
+rm(apred0,apred2)
