@@ -53,16 +53,23 @@ apred3 <- subset(apred2, apred2$State.Abbreviation=='NJ' |
                          apred2$State.Abbreviation=='RI',
                  select=c(1:11))
 
-
 ###REFORMAT COUNTY AND STATE VARIABLES TO MERGE ALL DATASETS###
-apred3$region_name <- str_c(apred3$Description, " County")
+apred3$County.Name <- str_c(apred3$Description, " County")
 apred3 <- apred3[c(-3)]
-rename(apred3, "region_name"="Description")
+apred3$Description <- str_c(apred3$County.Name,", ",apred3$State.Abbreviation)
+apred3 <- apred3[c(12,11,3,4:10)]
 
 northeast_sunroof$State.Abbreviation <- state.abb[match(northeast_sunroof$state_name,state.name)]
 northeast_sunroof$Description <- str_c(northeast_sunroof$region_name,", ",northeast_sunroof$State.Abbreviation)
 northeast_sunroof <- northeast_sunroof[c(-2)]
+northeast_sunroof <- rename(northeast_sunroof, "County.Name"="region_name")
+northeast_sunroof <- northeast_sunroof[c(26,1,25,2:24)]
+
+pop_demographics <- pop_demographics[c(4:25)]
+
+
 
 rm(pop_by_age_sex,pop_by_age_sex2,pop_by_age_sex3)
 rm(pop_by_race,pop_by_race2,pop_by_race3)
 rm(project_sunroof_county)
+rm(apred,apred2)
