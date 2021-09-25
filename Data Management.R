@@ -73,8 +73,38 @@ pop_demographics <- pop_demographics[c(4:25)]
 pop_dem_pct <- pop_demographics
 pop_dem_pct[, -(1:3)] <- sweep(pop_dem_pct[, -(1:3)], 1, pop_dem_pct[, 3], "/")
 
+apred4 <- apred3[c(1,5,6,9,10)]
+  
+# Educational Equity
+# Age
+# Transportation Access
+# Communication Capacity
+# Language Capacity
+# Special Needs
+# Health Coverage
+# Housing Capital
+# Employment
+# Income & Equality (GINI Coefficient)
+# Single Sector Employment Dependence
+# Employment (Female)
+# Housing Type
+# Shelter Capacity
+# Housing Age
+# Sheltering Need
+# Place Attachment ? Migration
+# Place Attachment ? Born
+# Social Capital ? Religion
+# Social Capital ? Civic Involvement
+# Social Capital ? Advocacy
 
 
+  for (i in unique(data3$hhid)){
+    temp=data3[which(data3$hhid==i),]
+    temp$oldest_child[which(temp$age==max(temp$age))]=TRUE
+    temp$oldest_male_child[which(temp$oldest_child==1 & temp$sex=="male")]=TRUE
+    data3a=rbind(data3a,temp)
+  }
+  
 rm(pop_by_age_sex,pop_by_age_sex2,pop_by_age_sex3)
 rm(pop_by_race,pop_by_race2,pop_by_race3)
 rm(project_sunroof_county)
