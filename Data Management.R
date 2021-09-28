@@ -59,8 +59,31 @@ metrics_dev4 <- metrics_dev3[c(3:8)]
 #pick out select variables
 metrics_dev5 <- data.frame()
 #snap benefits per capita
-metrics_dev5 <- rbind(metrics_dev5, dplyr::filter(metrics_dev4,M4D_Code==10200)
-#
+metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==10200,])
+#percent of population that is insured
+metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==10700,])
+#property crime per 1000 population
+metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==14100,])
+#violent crime per 1000 population
+metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==14000,])
+#total school revenue
+metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==16500,])
+#percent of population with high school diploma
+metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==21900,])
+#percent of population with bachelor's degree
+metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==22000,])
+#poverty rate
+metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==22200,])
+#population density
+metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==22900,])
+#proportion of single parent households
+metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==13600,])
+#suicide rate
+metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==13700,])
+#percent of working population that works full-time (35+ hrs) year round
+metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==14700,])
+
+
 
 ###REFORMAT COUNTY AND STATE VARIABLES TO MERGE ALL DATASETS###
 apred3$County.Name <- str_c(apred3$Description, " County")
