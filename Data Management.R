@@ -54,9 +54,9 @@ metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', PA',metr
 metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', CT',metrics_dev2$Description)))
 metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', RI',metrics_dev2$Description)))
 
-metrics_dev4 <- metrics_dev3[c(3:8)]
 
-#pick out select variables
+###SELECT VARIABLES###
+metrics_dev4 <- metrics_dev3[c(3:8)]
 metrics_dev5 <- data.frame()
 #snap benefits per capita
 metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==10200,])
@@ -93,6 +93,10 @@ northeast_sunroof <- northeast_sunroof[c(-2)]
 northeast_sunroof <- rename(northeast_sunroof, "County.Name"="region_name")
 northeast_sunroof <- northeast_sunroof[c(26,1,25,2:24)]
 
+solar_data0 <- northeast_sunroof[c(1:7,13:16,22:26)]
+solar_data0 <- solar_data0[order(solar_data0$Description),]
+rownames(solar_data0) <- NULL
+
 pop_demographics <- pop_demographics[c(4:25)]
 
 
@@ -116,11 +120,28 @@ for(i in 2:163){
   t_temp1 <- cbind(metrics_dev5[lower_row,2:3],t_temp0)
   metrics <- rbind(metrics,t_temp1)
 }
+#rename variables to shorter names
+colnames(metrics) <- c("Description",
+                       "Year",
+                       "snap_benefits",
+                       "pct_insured",
+                       "prop_crimes",
+                       "violent_crimes",
+                       "school_revenue",
+                       "pct_diploma",
+                       "pct_bachelors",
+                       "poverty_rate",
+                       "pop_density",
+                       "pct_single_parent",
+                       "suicide_rate",
+                       "pct_full_time"
+                        )
 
 ###JOIN EVERYTHING UP FOR FINAL DATASET
-solar_data0 <- merge(northeast_sunroof,metrics)
-solar_data1 <- 
+solar_data1 <- merge(solar_data0,metrics)
+solar_data2 <- merge(solar_data1,pop_dem_pct)
 
+write.csv(solar_data2,file="Solar/solar_data.csv")
 
 ##REMOVE EXTRA OBJECTS###
 rm(t_metrics_dev,t_metrics_dev0)
