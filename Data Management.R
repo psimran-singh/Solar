@@ -83,14 +83,10 @@ metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==13700,])
 #percent of working population that works full-time (35+ hrs) year round
 metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==14700,])
 
-
+metrics_dev5 <- metrics_dev5[order(metrics_dev5$Description),]
+rownames(metrics_dev5) <- NULL
 
 ###REFORMAT COUNTY AND STATE VARIABLES TO MERGE ALL DATASETS###
-apred3$County.Name <- str_c(apred3$Description, " County")
-apred3 <- apred3[c(-3)]
-apred3$Description <- str_c(apred3$County.Name,", ",apred3$State.Abbreviation)
-apred3 <- apred3[c(12,11,3,4:10)]
-
 northeast_sunroof$State.Abbreviation <- state.abb[match(northeast_sunroof$state_name,state.name)]
 northeast_sunroof$Description <- str_c(northeast_sunroof$region_name,", ",northeast_sunroof$State.Abbreviation)
 northeast_sunroof <- northeast_sunroof[c(-2)]
@@ -105,19 +101,35 @@ pop_demographics <- pop_demographics[c(4:25)]
 pop_dem_pct <- pop_demographics
 pop_dem_pct[, -(1:3)] <- sweep(pop_dem_pct[, -(1:3)], 1, pop_dem_pct[, 3], "/")
 
-namelist <- unique(metrics_dev4$M4D_Code)
-t_metrics_dev0 <- t(metrics_dev4[1:228,6])
-colnames(t_metrics_dev0) <- namelist
-t_metrics_dev <- cbind(metrics_dev4[1,2:3],t_metrics_dev0)
-names(t_metrics_dev) <- namelist
+#Reformat development metrics dataset
+#transpose the dataset for first county
+namelist <- unique(metrics_dev5$Code.Description)
+t_metrics <- t(metrics_dev5[1:12,6])
+colnames(t_metrics) <- namelist
+metrics <- cbind(metrics_dev5[1,2:3],t_metrics)
+#now loop over the rest of the counties and rbind them t_metrics_dev
+for(i in 2:163){
+  lower_row <- (12*i)-11
+  upper_row <- 12*i
+  t_temp0 <- t(metrics_dev5[lower_row:upper_row,6])
+  colnames(t_temp0) <- namelist
+  t_temp1 <- cbind(metrics_dev5[lower_row,2:3],t_temp0)
+  metrics <- rbind(metrics,t_temp1)
+}
 
-aaa=t(apred4[1:21,6])  ### so this code extract the values from 1-21 rows and 6th column and tranpose it to 1 row 21 columns
-aaa=rbind(aaa,t(apred4[22:42,6]))  ### you can write a loop to replace the 22:42 here, so that R can automatically extract every 21 rows
-aaa  ### I just wanted to show you an example of how the output looks like
+###JOIN EVERYTHING UP FOR FINAL DATASET
+solar_data0 <- merge(northeast_sunroof,metrics)
+solar_data1 <- 
 
-  
+
+##REMOVE EXTRA OBJECTS###
+rm(t_metrics_dev,t_metrics_dev0)
+rm(t_metrics, t_temp0, t_temp1, lower_row, upper_row, namelist, i)
 rm(pop_by_age_sex,pop_by_age_sex2,pop_by_age_sex3)
 rm(pop_by_race,pop_by_race2,pop_by_race3)
 rm(project_sunroof_county)
-rm(apred1,apred2)
-rm(metrics_dev0,metrics_dev1,metrics_dev2,metrics_dev3,metrics_dev5)
+rm(apred1,apred2,apred3,apred4)
+rm(metrics_dev0,metrics_dev1,metrics_dev2,metrics_dev3,metrics_dev4,metrics_dev5)
+rm(t_metrics_dev,t_metrics_dev0)
+rm(t_metrics, t_temp0)
+
