@@ -9,6 +9,7 @@ project_sunroof_county <- read.csv("Solar Data Files/project-sunroof-county.csv"
 pop_by_race <- read.csv("Solar Data Files/StatsAmerica Datasets/Population-by-Race/Population by Race - US, States, Counties.csv")
 pop_by_age_sex <- read.csv("Solar Data Files/StatsAmerica Datasets/Population-by-Age-and-Sex/Population by Age and Sex - US, States, Counties.csv")
 metrics_dev1 <- read.csv("Solar Data Files/StatsAmerica Datasets/Metrics-For-Development/Metrics For Development.csv")
+social_context0 <- read.csv("Solar Data Files/StatsAmerica Datasets/Social-Context/Social Context.csv")
 
 ###LIMIT ALL DATASETS TO SELECT STATES AND YEARS###
 northeast_sunroof <- subset(project_sunroof_county,
@@ -42,6 +43,8 @@ pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(',
 pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', RI',pop_by_age_sex2$Description)))
 
 pop_demographics <- merge(pop_by_age_sex3,pop_by_race3)
+pop_demographics <- pop_demographics[c(4:25)]
+
 
 metrics_dev2 <- subset(metrics_dev1,
                  metrics_dev1$Year=="2019",
@@ -53,6 +56,13 @@ metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', NJ',metr
 metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', PA',metrics_dev2$Description)))
 metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', CT',metrics_dev2$Description)))
 metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', RI',metrics_dev2$Description)))
+
+social_context1 <- data.frame()
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', NY',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', NJ',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', PA',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', CT',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', RI',social_context0$Description)))
 
 
 ###SELECT VARIABLES###
@@ -67,7 +77,7 @@ metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==14100,])
 #violent crime per 1000 population
 metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==14000,])
 #total school revenue
-metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==16500,])
+metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==15000,])
 #percent of population with high school diploma
 metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==21900,])
 #percent of population with bachelor's degree
@@ -86,6 +96,22 @@ metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==14700,])
 metrics_dev5 <- metrics_dev5[order(metrics_dev5$Description),]
 rownames(metrics_dev5) <- NULL
 
+social_context2 <- social_context1[c(4,6:8)]
+social_context3 <- data.frame()
+#income per capita
+social_context3 <- rbind(social_context3, social_context2[social_context2$Social_Context_Code==103,])
+#entrepreneurship
+social_context3 <- rbind(social_context3, social_context2[social_context2$Social_Context_Code==101,])
+#belief in science
+social_context3 <- rbind(social_context3, social_context2[social_context2$Social_Context_Code==206,])
+#risk taking
+social_context3 <- rbind(social_context3, social_context2[social_context2$Social_Context_Code==213,])
+#religiosity
+social_context3 <- rbind(social_context3, social_context2[social_context2$Social_Context_Code==212,])
+
+social_context3 <- social_context3[order(social_context3$Description),]
+rownames(social_context3) <- NULL
+
 ###REFORMAT COUNTY AND STATE VARIABLES TO MERGE ALL DATASETS###
 northeast_sunroof$State.Abbreviation <- state.abb[match(northeast_sunroof$state_name,state.name)]
 northeast_sunroof$Description <- str_c(northeast_sunroof$region_name,", ",northeast_sunroof$State.Abbreviation)
@@ -96,9 +122,6 @@ northeast_sunroof <- northeast_sunroof[c(26,1,25,2:24)]
 solar_data0 <- northeast_sunroof[c(1:7,13:16,22:26)]
 solar_data0 <- solar_data0[order(solar_data0$Description),]
 rownames(solar_data0) <- NULL
-
-pop_demographics <- pop_demographics[c(4:25)]
-
 
 ###ADDITIONAL TRANSFORMATIONS###
 #Create percentages for demographic data
@@ -127,7 +150,7 @@ colnames(metrics) <- c("Description",
                        "pct_insured",
                        "prop_crimes",
                        "violent_crimes",
-                       "school_revenue",
+                       "rural_urban_score",
                        "pct_diploma",
                        "pct_bachelors",
                        "poverty_rate",
@@ -137,11 +160,43 @@ colnames(metrics) <- c("Description",
                        "pct_full_time"
                         )
 
-###JOIN EVERYTHING UP FOR FINAL DATASET
+#Reformat social context dataset
+#transpose the dataset for first county
+namelist2 <- unique(social_context3$Social_Context_Code_Description)
+t_social <- t(social_context3[1:5,4])
+colnames(t_social) <- namelist2
+social_context <- cbind(social_context3[1,1],t_social)
+#now loop over the rest of the counties and rbind them t_metrics_dev
+for(i in 2:163){
+  lower_row <- (5*i)-4
+  upper_row <- 5*i
+  t_temp0 <- t(social_context3[lower_row:upper_row,4])
+  colnames(t_temp0) <- namelist2
+  t_temp1 <- cbind(social_context3[lower_row,1],t_temp0)
+  social_context <- rbind(social_context,t_temp1)
+}
+#rename variables to match format
+colnames(social_context) <- c("Description",
+                              "income_per_capita",
+                              "entrepeneurship",
+                              "belief_in_science",
+                              "risk_taking",
+                              "religiosity")
+
+social_context <- as.data.frame(social_context)
+
+###JOIN EVERYTHING UP FOR FINAL DATASET###
 solar_data1 <- merge(solar_data0,metrics)
 solar_data2 <- merge(solar_data1,pop_dem_pct)
+                     
+###CALCULATE MORE VARIABLES###
+solar_data2$pct_installed <- solar_data2$existing_installs_count/solar_data2$count_qualified
 
-write.csv(solar_data2,file="Solar/solar_data.csv")
+###LIMIT TO VARIABLES THAT WE'LL ACTUALLY USE
+solar_data3 <- solar_data2[c(1,3,4,50,11,19,20,24,26,27,35,41,42)]
+
+###MERGE SOCIAL CONTEXT AS WELL###
+solar_data4 <- merge(solar_data3,social_context)
 
 ##REMOVE EXTRA OBJECTS###
 rm(t_metrics_dev,t_metrics_dev0)
@@ -153,4 +208,6 @@ rm(apred1,apred2,apred3,apred4)
 rm(metrics_dev0,metrics_dev1,metrics_dev2,metrics_dev3,metrics_dev4,metrics_dev5)
 rm(t_metrics_dev,t_metrics_dev0)
 rm(t_metrics, t_temp0)
+rm(social_context0,social_context1,social_context2,social_context3, t_social)
+rm(solar_data1,solar_data2,solar_data3)
 
