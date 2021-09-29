@@ -112,6 +112,8 @@ social_context3 <- rbind(social_context3, social_context2[social_context2$Social
 social_context3 <- social_context3[order(social_context3$Description),]
 rownames(social_context3) <- NULL
 
+social_context3$Social_Context_Domain_Data <- as.numeric(social_context3$Social_Context_Domain_Data)
+
 ###REFORMAT COUNTY AND STATE VARIABLES TO MERGE ALL DATASETS###
 northeast_sunroof$State.Abbreviation <- state.abb[match(northeast_sunroof$state_name,state.name)]
 northeast_sunroof$Description <- str_c(northeast_sunroof$region_name,", ",northeast_sunroof$State.Abbreviation)
@@ -184,6 +186,12 @@ colnames(social_context) <- c("Description",
                               "religiosity")
 
 social_context <- as.data.frame(social_context)
+social_context$income_per_capita <- as.numeric(social_context$income_per_capita)
+social_context$entrepeneurship <- as.numeric(social_context$entrepeneurship)
+social_context$belief_in_science <- as.numeric(social_context$belief_in_science)
+social_context$risk_taking <- as.numeric(social_context$risk_taking)
+social_context$religiosity <- as.numeric(social_context$religiosity)
+
 
 ###JOIN EVERYTHING UP FOR FINAL DATASET###
 solar_data1 <- merge(solar_data0,metrics)
