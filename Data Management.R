@@ -76,7 +76,7 @@ metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==10700,])
 metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==14100,])
 #violent crime per 1000 population
 metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==14000,])
-#total school revenue
+#urban-rural continuum score
 metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==15000,])
 #percent of population with high school diploma
 metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==21900,])
@@ -199,23 +199,44 @@ solar_data2 <- merge(solar_data1,pop_dem_pct)
                      
 ###CALCULATE MORE VARIABLES###
 solar_data2$pct_installed <- solar_data2$existing_installs_count/solar_data2$count_qualified
+solar_data2$
 
 ###LIMIT TO VARIABLES THAT WE'LL ACTUALLY USE
-solar_data3 <- solar_data2[c(1,3,4,50,11,19,20,24,26,27,35,41,42)]
+solar_data3 <- solar_data2[c(1,3,4,50,11,19,20,22,24,26,27,35,41,42)]
 
 ###MERGE SOCIAL CONTEXT AS WELL###
 solar_data4 <- merge(solar_data3,social_context)
 
 ##REMOVE EXTRA OBJECTS###
-rm(t_metrics_dev,t_metrics_dev0)
-rm(t_metrics, t_temp0, t_temp1, lower_row, upper_row, namelist, i)
-rm(pop_by_age_sex,pop_by_age_sex2,pop_by_age_sex3)
-rm(pop_by_race,pop_by_race2,pop_by_race3)
-rm(project_sunroof_county)
-rm(apred1,apred2,apred3,apred4)
-rm(metrics_dev0,metrics_dev1,metrics_dev2,metrics_dev3,metrics_dev4,metrics_dev5)
-rm(t_metrics_dev,t_metrics_dev0)
-rm(t_metrics, t_temp0)
-rm(social_context0,social_context1,social_context2,social_context3, t_social)
-rm(solar_data1,solar_data2,solar_data3)
+rm(pop_by_race,
+   pop_by_race2,
+   pop_by_race3,
+   pop_dem_pct,
+   pop_demographics,
+   pop_by_age_sex,
+   pop_by_age_sex2,
+   pop_by_age_sex3)
+rm(project_sunroof_county,
+   solar_data0,
+   solar_data1,
+   solar_data3)
+rm(social_context0,
+   social_context1,
+   social_context2,
+   social_context3)
+rm(metrics_dev1,
+   metrics_dev2,
+   metrics_dev3,
+   metrics_dev4,
+   metrics_dev5)
+rm(t_metrics,
+   t_social,
+   t_temp0,
+   t_temp1,
+   i,
+   lower_row,
+   upper_row,
+   namelist,
+   namelist2)
+
 
