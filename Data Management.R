@@ -171,24 +171,35 @@ metrics_dev5 <- metrics_dev5[order(metrics_dev5$Description),]
 rownames(metrics_dev5) <- NULL
 
 social_context2 <- social_context1[c(4,6:8)]
-social_context3 <- data.frame()
-#income per capita
-social_context3 <- rbind(social_context3, social_context2[social_context2$Social_Context_Code==103,])
-#entrepreneurship
-social_context3 <- rbind(social_context3, social_context2[social_context2$Social_Context_Code==101,])
-#belief in science
-social_context3 <- rbind(social_context3, social_context2[social_context2$Social_Context_Code==206,])
-#risk taking
-social_context3 <- rbind(social_context3, social_context2[social_context2$Social_Context_Code==213,])
-#religiosity
-social_context3 <- rbind(social_context3, social_context2[social_context2$Social_Context_Code==212,])
+social_context3 <- social_context2
+# social_context3 <- data.frame()
+# #income per capita
+# social_context3 <- rbind(social_context3, social_context2[social_context2$Social_Context_Code==103,])
+# #entrepreneurship
+# social_context3 <- rbind(social_context3, social_context2[social_context2$Social_Context_Code==101,])
+# #belief in science
+# social_context3 <- rbind(social_context3, social_context2[social_context2$Social_Context_Code==206,])
+# #risk taking
+# social_context3 <- rbind(social_context3, social_context2[social_context2$Social_Context_Code==213,])
+# #religiosity
+# social_context3 <- rbind(social_context3, social_context2[social_context2$Social_Context_Code==212,])
 
 social_context3 <- social_context3[order(social_context3$Description),]
 rownames(social_context3) <- NULL
 
 social_context3$Social_Context_Domain_Data <- as.numeric(social_context3$Social_Context_Domain_Data)
-#Dropping Miami-Dade County,FL b/c its missing entrepreneurship variable entry
-social_context3 <- social_context3[social_context3$Description!="Miami-Dade County, FL",]
+
+#Check which counties don't have all 20 variables
+a <- social_context3 %>%
+  group_by(Description) %>%
+  summarise(count=n())
+b <- a[a$count!=20,]
+b
+c <- a[a$count==20,1]
+c
+
+#Drop counties w/o all 20 variables
+social_context3 <- social_context3[social_context3$Description %in% c$Description,]
 
 ###REFORMAT COUNTY AND STATE VARIABLES TO MERGE ALL DATASETS###
 northeast_sunroof$State.Abbreviation <- state.abb[match(northeast_sunroof$state_name,state.name)]
@@ -241,33 +252,24 @@ colnames(metrics) <- c("Description",
 #Reformat social context dataset
 #transpose the dataset for first county
 namelist2 <- unique(social_context3$Social_Context_Code_Description)
-t_social <- t(social_context3[1:5,4])
+t_social <- t(social_context3[1:20,4])
 colnames(t_social) <- namelist2
 social_context <- cbind(social_context3[1,1],t_social)
+social_context <- as.data.frame(social_context)
+social_context[c(2:21)] <- as.numeric(social_context[c(2:21)])
 #now loop over the rest of the counties and rbind them t_metrics_dev
-for(i in 2:738){
-  lower_row <- (5*i)-4
-  upper_row <- 5*i
+for(i in 2:711){
+  lower_row <- (20*i)-19
+  upper_row <- 20*i
   t_temp0 <- t(social_context3[lower_row:upper_row,4])
   colnames(t_temp0) <- namelist2
   t_temp1 <- cbind(social_context3[lower_row,1],t_temp0)
+  t_temp1 <- as.data.frame(t_temp1)
+  t_temp1[c(2:21)] <- as.numeric(t_temp1[c(2:21)])
   social_context <- rbind(social_context,t_temp1)
 }
 #rename variables to match format
-colnames(social_context) <- c("Description",
-                              "income_per_capita",
-                              "entrepeneurship",
-                              "belief_in_science",
-                              "risk_taking",
-                              "religiosity")
-
-social_context <- as.data.frame(social_context)
-social_context$income_per_capita <- as.numeric(social_context$income_per_capita)
-social_context$entrepeneurship <- as.numeric(social_context$entrepeneurship)
-social_context$belief_in_science <- as.numeric(social_context$belief_in_science)
-social_context$risk_taking <- as.numeric(social_context$risk_taking)
-social_context$religiosity <- as.numeric(social_context$religiosity)
-
+social_context <- rename(social_context,"Description"="V1")
 
 ###JOIN EVERYTHING UP FOR FINAL DATASET###
 solar_data1 <- merge(solar_data0,metrics)
