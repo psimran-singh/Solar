@@ -109,3 +109,26 @@ p16 <- ggplot(solar_data4, aes(religiosity)) +
   xlab("Religiosity Score") +
   ylab("Density") +
   theme_classic()
+
+###########################################
+library(gtable)
+g1 <- ggplotGrob(p1)
+g2 <- ggplotGrob(p2)
+g3 <- ggplotGrob(p3)
+g4 <- ggplotGrob(p4)
+g5 <- ggplotGrob(p5)
+g6 <- ggplotGrob(p6)
+g7 <- ggplotGrob(p7)
+g8 <- ggplotGrob(p8)
+g9 <- ggplotGrob(p9)
+g10 <- ggplotGrob(p10)
+g11 <- ggplotGrob(p11)
+g12 <- ggplotGrob(p12)
+g13 <- ggplotGrob(p13)
+g14 <- ggplotGrob(p14)
+g15 <- ggplotGrob(p15)
+g16 <- ggplotGrob(p16)
+
+
+
+
