@@ -3,26 +3,60 @@ library(ggplot2)
 library(dplyr)
 library(gtsummary)
 library(psych)
+library(corrplot)
+library(xtable)
+library(knitr)
 
 summary(solar_data4)
 
-with(solar_data2, plot(pct_installed,White.Alone))
-with(solar_data2, plot(pct_installed,poverty_rate))
-with(solar_data2, plot(pct_full_time,pct_installed))
+solar_data4b <- solar_data4
+colnames(solar_data4b) <- c("Description",
+                           "County Name",
+                           "State",
+                           "% Solar Panel Installed",
+                           "Median KW Potential",
+                           "% w/ Health Insurance",
+                           "Property Crime Rate",
+                           "Rural/Urban Score",
+                           "% w/ Bachelor's Degree",
+                           "Population Density",
+                           "% Children w/ Single Parent",
+                           "% Population Age 45-64",
+                           "% Female",
+                           "% White",
+                           "Income per Capita",
+                           "Entrepeneurship Score",
+                           "Belief in Science Score",
+                           "Risk Taking Score",
+                           "Religiosity Score")
 
-with(solar_data2, plot(White.Alone, pct_qualified_real))
-with(solar_data2, plot(Population.55.,pct_qualified_real))
-with(solar_data2, plot(pct_full_time,pct_qualified_real))
-
-solar_data5 <- solar_data4[c(4:18)]
-solar_data5$income_per_capita <- as.numeric(solar_data5$income_per_capita)
+solar_data5 <- solar_data4b[c(4:19)]
 
 principal(solar_data5)
 
 solar_data5.cor = cor(solar_data5)
 solar_data5.cor
 
+jpeg("CorrPlot.jpeg", width = 10, height = 10, units = 'in', res = 300)
+corrplot(solar_data5.cor,
+         type="full",
+         method="shade",
+         addCoef.col = TRUE,
+         tl.cex=1,
+         tl.col="black",
+         number.cex=.75,
+         number.digits=2,
+         sig.level=TRUE,
+         cl.cex=1,
+         tl.srt=45,
+         addgrid.col="black",
+         order="FPC")
+dev.off()
 
-correlations <- cov2cor(covariances)
-fa.parallel(correlations, n.obs=112, fa="both", n.iter=100,
-              main="Scree plots with parallel analysis")
+
+solar.fa <- factanal(solar_data5,factors=2)
+solar.fa
+
+
+lm <- lm(prop_crimes ~ White.Alone + pct_bachelors + income_per_capita, data = solar_data5)
+summary(lm)
