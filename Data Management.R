@@ -187,7 +187,8 @@ social_context3 <- social_context3[order(social_context3$Description),]
 rownames(social_context3) <- NULL
 
 social_context3$Social_Context_Domain_Data <- as.numeric(social_context3$Social_Context_Domain_Data)
-
+#Dropping Miami-Dade County,FL b/c its missing entrepreneurship variable entry
+social_context3 <- social_context3[social_context3$Description!="Miami-Dade County, FL",]
 
 ###REFORMAT COUNTY AND STATE VARIABLES TO MERGE ALL DATASETS###
 northeast_sunroof$State.Abbreviation <- state.abb[match(northeast_sunroof$state_name,state.name)]
@@ -244,7 +245,7 @@ t_social <- t(social_context3[1:5,4])
 colnames(t_social) <- namelist2
 social_context <- cbind(social_context3[1,1],t_social)
 #now loop over the rest of the counties and rbind them t_metrics_dev
-for(i in 2:163){
+for(i in 2:738){
   lower_row <- (5*i)-4
   upper_row <- 5*i
   t_temp0 <- t(social_context3[lower_row:upper_row,4])
@@ -274,9 +275,10 @@ solar_data2 <- merge(solar_data1,pop_dem_pct)
                      
 ###CALCULATE MORE VARIABLES###
 solar_data2$pct_installed <- solar_data2$existing_installs_count/solar_data2$count_qualified
+solar_data2b <- solar_data2[solar_data2$existing_installs_count>100,]
 
 ###LIMIT TO VARIABLES THAT WE'LL ACTUALLY USE
-solar_data3 <- solar_data2[c(1,3,4,50,11,19,20,22,24,26,27,35,41,42)]
+solar_data3 <- solar_data2b[c(1,3,4,50,11,19,20,22,24,26,27,35,41,42)]
 
 ###MERGE SOCIAL CONTEXT AS WELL###
 solar_data4 <- merge(solar_data3,social_context)
