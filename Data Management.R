@@ -17,7 +17,21 @@ northeast_sunroof <- subset(project_sunroof_county,
   project_sunroof_county$state_name=="Pennsylvania" |
   project_sunroof_county$state_name=="New Jersey" |
   project_sunroof_county$state_name=="Connecticut" |
-  project_sunroof_county$state_name=="Rhode Island",
+  project_sunroof_county$state_name=="Rhode Island" |
+  project_sunroof_county$state_name=="Massachusetts" |
+  project_sunroof_county$state_name=="Maryland" |
+  project_sunroof_county$state_name=="Delaware" |
+  project_sunroof_county$state_name=="New Hampshire" |
+  project_sunroof_county$state_name=="Vermont" |
+  project_sunroof_county$state_name=="Maine" |
+  project_sunroof_county$state_name=="North Carolina" |
+  project_sunroof_county$state_name=="South Carolina" |
+  project_sunroof_county$state_name=="Georgia" |
+  project_sunroof_county$state_name=="Florida" |
+  project_sunroof_county$state_name=="California" |
+  project_sunroof_county$state_name=="Nevada" |
+  project_sunroof_county$state_name=="Arizona" |
+  project_sunroof_county$state_name=="New Mexico",
 select=c(1:2,9:31))
 
 pop_by_race2 <- subset(pop_by_race,
@@ -30,6 +44,21 @@ pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', NJ',pop_
 pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', PA',pop_by_race2$Description)))
 pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', CT',pop_by_race2$Description)))
 pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', RI',pop_by_race2$Description)))
+pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', MA',pop_by_race2$Description)))
+pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', MD',pop_by_race2$Description)))
+pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', DE',pop_by_race2$Description)))
+pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', NH',pop_by_race2$Description)))
+pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', VT',pop_by_race2$Description)))
+pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', ME',pop_by_race2$Description)))
+pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', NC',pop_by_race2$Description)))
+pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', SC',pop_by_race2$Description)))
+pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', GA',pop_by_race2$Description)))
+pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', FL',pop_by_race2$Description)))
+pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', CA',pop_by_race2$Description)))
+pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', NV',pop_by_race2$Description)))
+pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', AZ',pop_by_race2$Description)))
+pop_by_race3 <- rbind(pop_by_race3, dplyr::filter(pop_by_race2,grepl(', NM',pop_by_race2$Description)))
+
 
 pop_by_age_sex2 <- subset(pop_by_age_sex,
                    pop_by_age_sex$Year=="2019",
@@ -41,6 +70,21 @@ pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(',
 pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', PA',pop_by_age_sex2$Description)))
 pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', CT',pop_by_age_sex2$Description)))
 pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', RI',pop_by_age_sex2$Description)))
+pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', MA',pop_by_age_sex2$Description)))
+pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', MD',pop_by_age_sex2$Description)))
+pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', DE',pop_by_age_sex2$Description)))
+pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', NH',pop_by_age_sex2$Description)))
+pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', VT',pop_by_age_sex2$Description)))
+pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', ME',pop_by_age_sex2$Description)))
+pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', NC',pop_by_age_sex2$Description)))
+pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', SC',pop_by_age_sex2$Description)))
+pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', GA',pop_by_age_sex2$Description)))
+pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', FL',pop_by_age_sex2$Description)))
+pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', CA',pop_by_age_sex2$Description)))
+pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', NV',pop_by_age_sex2$Description)))
+pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', AZ',pop_by_age_sex2$Description)))
+pop_by_age_sex3 <- rbind(pop_by_age_sex3, dplyr::filter(pop_by_age_sex2,grepl(', NM',pop_by_age_sex2$Description)))
+
 
 pop_demographics <- merge(pop_by_age_sex3,pop_by_race3)
 pop_demographics <- pop_demographics[c(4:25)]
@@ -56,6 +100,22 @@ metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', NJ',metr
 metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', PA',metrics_dev2$Description)))
 metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', CT',metrics_dev2$Description)))
 metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', RI',metrics_dev2$Description)))
+metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', MA',metrics_dev2$Description)))
+metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', MD',metrics_dev2$Description)))
+metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', DE',metrics_dev2$Description)))
+metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', NH',metrics_dev2$Description)))
+metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', VT',metrics_dev2$Description)))
+metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', ME',metrics_dev2$Description)))
+metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', NC',metrics_dev2$Description)))
+metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', SC',metrics_dev2$Description)))
+metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', GA',metrics_dev2$Description)))
+metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', FL',metrics_dev2$Description)))
+metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', CA',metrics_dev2$Description)))
+metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', NV',metrics_dev2$Description)))
+metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', AZ',metrics_dev2$Description)))
+metrics_dev3 <- rbind(metrics_dev3, dplyr::filter(metrics_dev2,grepl(', NM',metrics_dev2$Description)))
+
+
 
 social_context1 <- data.frame()
 social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', NY',social_context0$Description)))
@@ -63,6 +123,20 @@ social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(',
 social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', PA',social_context0$Description)))
 social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', CT',social_context0$Description)))
 social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', RI',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', MA',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', MD',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', DE',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', NH',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', VT',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', ME',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', NC',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', SC',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', GA',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', FL',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', CA',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', NV',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', AZ',social_context0$Description)))
+social_context1 <- rbind(social_context1, dplyr::filter(social_context0,grepl(', NM',social_context0$Description)))
 
 
 ###SELECT VARIABLES###
@@ -114,6 +188,7 @@ rownames(social_context3) <- NULL
 
 social_context3$Social_Context_Domain_Data <- as.numeric(social_context3$Social_Context_Domain_Data)
 
+
 ###REFORMAT COUNTY AND STATE VARIABLES TO MERGE ALL DATASETS###
 northeast_sunroof$State.Abbreviation <- state.abb[match(northeast_sunroof$state_name,state.name)]
 northeast_sunroof$Description <- str_c(northeast_sunroof$region_name,", ",northeast_sunroof$State.Abbreviation)
@@ -137,7 +212,7 @@ t_metrics <- t(metrics_dev5[1:12,6])
 colnames(t_metrics) <- namelist
 metrics <- cbind(metrics_dev5[1,2:3],t_metrics)
 #now loop over the rest of the counties and rbind them t_metrics_dev
-for(i in 2:163){
+for(i in 2:739){
   lower_row <- (12*i)-11
   upper_row <- 12*i
   t_temp0 <- t(metrics_dev5[lower_row:upper_row,6])
@@ -199,7 +274,6 @@ solar_data2 <- merge(solar_data1,pop_dem_pct)
                      
 ###CALCULATE MORE VARIABLES###
 solar_data2$pct_installed <- solar_data2$existing_installs_count/solar_data2$count_qualified
-solar_data2$
 
 ###LIMIT TO VARIABLES THAT WE'LL ACTUALLY USE
 solar_data3 <- solar_data2[c(1,3,4,50,11,19,20,22,24,26,27,35,41,42)]
