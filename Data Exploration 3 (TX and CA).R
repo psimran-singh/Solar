@@ -10,6 +10,9 @@ library(ggbiplot)
 
 summary(solar_data4)
 
+#Making a Texas Variable
+solar_data4$"In Texas" <- solar_data4$State.Abbreviation=="TX"
+
 solar_data4b <- solar_data4
 colnames(solar_data4b) <- c("Description",
                            "County Name",
@@ -29,33 +32,61 @@ colnames(solar_data4b) <- c("Description",
                            "Entrepeneurship Score",
                            "Belief in Science Score",
                            "Risk Taking Score",
-                           "Religiosity Score")
+                           "Religiosity Score",
+                           "Income Mobility Score",
+                           "Employment Rate",
+                           "In Texas")
 
-solar_data5 <- solar_data4b[c(4:19)]
+solar_data5 <- solar_data4b[c(4:7,9:20,22)]
 
 ###Some last minute transformations to normalize our variables
 solar_data5b <- solar_data5
-solar_data5b$"Population Density" <- (solar_data5$"Population Density")^(.5)
+skewness(solar_data5b$"Population Density")
+solar_data5b$"Population Density" <- log(solar_data5$"Population Density")
 plot(density(solar_data5b$"Population Density"))
-solar_data5b$"% White" <- log(solar_data5$"% White")
+
+skewness(solar_data5$"% White")
+solar_data5b$"% White" <- (solar_data5$"% White")^(0.5)
 plot(density(solar_data5b$"% White"))
 
-##Principal Components
-pca <- prcomp(solar_data5, center=TRUE, scale.=TRUE)
-pca
-ggbiplot(pca)
+# skewness(solar_data5$"% Solar Panel Installed")
+# solar_data5b$"% Solar Panel Installed" <- (solar_data5$"% Solar Panel Installed")
+# plot(density(solar_data5b$"% Solar Panel Installed"))
 
-pca2 <- principal(solar_data5, rotate="none", nfactors=16, scores=TRUE)
-pca3 <- principal(solar_data5, rotate="varimax", nfactors=16, scores=TRUE)
+##Principal Components
+pca <- prcomp(solar_data5b, center=TRUE, scale.=TRUE)
+pca2 <- prcomp(solar_data5b, center=TRUE, scale.=TRUE, retx=TRUE)
+pca
+pca2
+ggbiplot(pca)
+ggbiplot(pca2)
+
+
+
+pca2 <- principal(solar_data5, rotate="none", nfactors=17, scores=TRUE)
+pca3 <- principal(solar_data5, rotate="varimax", nfactors=17, scores=TRUE)
 pca2
 pca3
 
-#Correlation Matrix
-solar_data5.cor = cor(solar_data5)
-solar_data5.cor
+#ScreePlots
+qplot(c(1:17), pca2$values) + 
+  geom_line() + 
+  xlab("Principal Component") + 
+  ylab("Variance Explained") +
+  ggtitle("Scree Plot")
 
-jpeg("CorrPlot.jpeg", width = 10, height = 10, units = 'in', res = 300)
-corrplot(solar_data5.cor,
+qplot(c(1:17), pca3$values) + 
+  geom_line() + 
+  xlab("Principal Component") + 
+  ylab("Variance Explained") +
+  ggtitle("Scree Plot")
+
+#Correlation Matrix
+solar_data5b.cor = cor(solar_data5b)
+solar_data5b.cor
+
+jpeg("CorrPlot2.jpeg", width = 10, height = 10, units = 'in', res = 300)
+corrplot(solar_data5b.cor,
          type="full",
          method="shade",
          addCoef.col = TRUE,

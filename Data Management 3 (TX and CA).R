@@ -190,7 +190,7 @@ for(i in 2:261){
 #rename variables to match format
 social_context <- rename(social_context,"Description"="V1")
 rownames(social_context) <- NULL
-social_context <- social_context[c(1,2,4,11,17,18)]
+social_context <- social_context[c(1,2,4,11,17,18,3,5)]
 
 ###JOIN EVERYTHING UP FOR FINAL DATASET###
 solar_data1 <- merge(solar_data0,metrics)
