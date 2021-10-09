@@ -32,7 +32,13 @@ colnames(solar_data4b) <- c("Description",
                            "Religiosity Score")
 
 solar_data5 <- solar_data4b[c(4:19)]
-write.csv(solar_data5, file="solar_data5.csv")
+
+###Some last minute transformations to normalize our variables
+solar_data5b <- solar_data5
+solar_data5b$"Population Density" <- (solar_data5$"Population Density")^(.5)
+plot(density(solar_data5b$"Population Density"))
+solar_data5b$"% White" <- log(solar_data5$"% White")
+plot(density(solar_data5b$"% White"))
 
 ##Principal Components
 pca <- prcomp(solar_data5, center=TRUE, scale.=TRUE)
