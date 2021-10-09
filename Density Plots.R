@@ -1,3 +1,5 @@
+library(ggplot2)
+
 p1 <- ggplot(solar_data4, aes(pct_installed)) +
   geom_density() + 
   ggtitle("% Solar Panel Installed") +
@@ -75,35 +77,35 @@ p11 <- ggplot(solar_data4, aes(White.Alone)) +
   ylab("Density") +
   theme_classic()
 
-p12 <- ggplot(solar_data4, aes(income_per_capita)) +
+p12 <- ggplot(solar_data4, aes(`Income Per Capita`)) +
   geom_density() + 
   ggtitle("Income per Capita") +
   xlab("Income per Capita") +
   ylab("Density") +
   theme_classic()
 
-p13 <- ggplot(solar_data4, aes(entrepeneurship)) +
+p13 <- ggplot(solar_data4, aes(`Entrepreneurship`)) +
   geom_density() + 
   ggtitle("Entrepeneurship Score") +
   xlab("Entrepeneurship Score") +
   ylab("Density") +
   theme_classic()
 
-p14 <- ggplot(solar_data4, aes(belief_in_science)) +
+p14 <- ggplot(solar_data4, aes(`Belief In Science`)) +
   geom_density() + 
   ggtitle("Belief in Science Score Score") +
   xlab("Belief in Science Score") +
   ylab("Density") +
   theme_classic()
 
-p15 <- ggplot(solar_data4, aes(risk_taking)) +
+p15 <- ggplot(solar_data4, aes(`Risk Taking`)) +
   geom_density() + 
   ggtitle("Risk Taking Score") +
   xlab("Risk Taking Score") +
   ylab("Density") +
   theme_classic()  
 
-p16 <- ggplot(solar_data4, aes(religiosity)) +
+p16 <- ggplot(solar_data4, aes(`Religiosity`)) +
   geom_density() + 
   ggtitle("Religiosity Score") +
   xlab("Religiosity Score") +
@@ -133,9 +135,9 @@ grid.arrange(g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12, g13, g14, g15, g
              nrows=4, ncols=4)
 
 library(ggpubr)
+plotlist <- list(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16)
 ggarrange(plotlist=plotlist,nrow=4,ncol=4)
 
 library(cowplot)
-plotlist <- list(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16)
 plot_grid(plotlist, nrow=4)
 
