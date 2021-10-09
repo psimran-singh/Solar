@@ -6,39 +6,31 @@ library(psych)
 library(corrplot)
 library(xtable)
 library(knitr)
+library(pastecs)
+library(xlsx)
+library(ggbiplot)
 
 summary(solar_data4)
 
-solar_data4b <- solar_data4
-colnames(solar_data4b) <- c("Description",
-                            "County Name",
-                            "State",
-                            "% Solar Panel Installed",
-                            "Median KW Potential",
-                            "% w/ Health Insurance",
-                            "Property Crime Rate",
-                            "Rural/Urban Score",
-                            "% w/ Bachelor's Degree",
-                            "Population Density",
-                            "% Children w/ Single Parent",
-                            "% Population Age 45-64",
-                            "% Female",
-                            "% White",
-                            "Income per Capita",
-                            "Entrepeneurship Score",
-                            "Belief in Science Score",
-                            "Risk Taking Score",
-                            "Religiosity Score")
+solar_data4c <- solar_data4
+summary(solar_data4c)
+data_desc <- stat.desc(solar_data4)
+#rename columns later
 
-solar_data5 <- solar_data4b[c(4:19)]
+solar_data5c <- solar_data4c[c(4:5,7,9,12:15,17,18,21,22,23,24,25,27,28,29,30,33,34)]
 
-principal(solar_data5)
+#Principal Components Analysis
+pca1 <- prcomp(solar_data5c)
+print(pca1)
+ggbiplot(pca1)
+summary(pca1)
 
-solar_data5.cor = cor(solar_data5)
-solar_data5.cor
+#Correlation matrix
+solar_data5c.cor = cor(solar_data5c)
+solar_data5c.cor
 
-jpeg("CorrPlot.jpeg", width = 10, height = 10, units = 'in', res = 300)
-corrplot(solar_data5.cor,
+jpeg("CorrPlot2.jpeg", width = 10, height = 10, units = 'in', res = 300)
+corrplot(solar_data5c.cor,
          type="full",
          method="shade",
          addCoef.col = TRUE,
@@ -53,8 +45,8 @@ corrplot(solar_data5.cor,
          order="FPC")
 dev.off()
 
-
-solar.fa <- factanal(solar_data5,factors=2)
+#Factor Analysis
+solar.fa <- factanal(solar_data5c,factors=5)
 solar.fa
 
 
