@@ -6,6 +6,7 @@ library(psych)
 library(corrplot)
 library(xtable)
 library(knitr)
+library(ggbiplot)
 
 summary(solar_data4)
 
@@ -31,9 +32,19 @@ colnames(solar_data4b) <- c("Description",
                            "Religiosity Score")
 
 solar_data5 <- solar_data4b[c(4:19)]
+write.csv(solar_data5, file="solar_data5.csv")
 
-principal(solar_data5)
+##Principal Components
+pca <- prcomp(solar_data5, center=TRUE, scale.=TRUE)
+pca
+ggbiplot(pca)
 
+pca2 <- principal(solar_data5, rotate="none", nfactors=16, scores=TRUE)
+pca3 <- principal(solar_data5, rotate="varimax", nfactors=16, scores=TRUE)
+pca2
+pca3
+
+#Correlation Matrix
 solar_data5.cor = cor(solar_data5)
 solar_data5.cor
 
@@ -53,10 +64,10 @@ corrplot(solar_data5.cor,
          order="FPC")
 dev.off()
 
-
-solar.fa <- factanal(solar_data5,factors=2)
+#Factor Analysis
+solar.fa <- factanal(solar_data5,factors=5)
 solar.fa
-
+summary(solar.fa)
 
 lm <- lm(prop_crimes ~ White.Alone + pct_bachelors + income_per_capita, data = solar_data5)
 summary(lm)
