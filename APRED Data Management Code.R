@@ -9,14 +9,11 @@ apred1 <- read.csv("Solar Data Files/StatsAmerica Datasets/APRED/APRED - Disaste
 
 ###LIMIT ALL DATASETS TO SELECT STATES AND YEARS###
 apred2 <- subset(apred1,
-                 apred$Year=="2019",
+                 apred1$Year=="2019",
                  select=c(1:11))
 
-apred3 <- subset(apred2, apred2$State.Abbreviation=='NJ' |
-                   apred2$State.Abbreviation=='NY' |
-                   apred2$State.Abbreviation=='CT' |
-                   apred2$State.Abbreviation=='PA' |
-                   apred2$State.Abbreviation=='RI',
+apred3 <- subset(apred2, apred2$State.Abbreviation=='TX' |
+                   apred2$State.Abbreviation=='CA',
                  select=c(1:11))
 
 ###REFORMAT COUNTY AND STATE VARIABLES TO MERGE ALL DATASETS###
