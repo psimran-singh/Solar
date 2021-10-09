@@ -277,6 +277,8 @@ solar_data2 <- merge(solar_data1,pop_dem_pct)
                      
 ###CALCULATE MORE VARIABLES###
 solar_data2$pct_installed <- solar_data2$existing_installs_count/solar_data2$count_qualified
+#fix these percentages to match the rest
+solar_data2[c(31:50)]<-solar_data2[c(31:50)]*100
 solar_data2b <- solar_data2[solar_data2$existing_installs_count>100,]
 
 ###LIMIT TO VARIABLES THAT WE'LL ACTUALLY USE
