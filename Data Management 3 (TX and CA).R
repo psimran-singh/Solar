@@ -65,8 +65,8 @@ metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==10700,])
 metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==14100,])
 #violent crime per 1000 population
 metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==14000,])
-#urban-rural continuum score
-metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==15000,])
+#net migration rate
+metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==22100,])
 #percent of population with high school diploma
 metrics_dev5 <- rbind(metrics_dev5, metrics_dev4[metrics_dev4$M4D_Code==21900,])
 #percent of population with bachelor's degree
@@ -107,7 +107,7 @@ social_context3$Social_Context_Domain_Data <- as.numeric(social_context3$Social_
 #Check which counties don't have all 20 variables
 a <- social_context3 %>%
   group_by(Description) %>%
-  summarise(count=n())
+  dplyr::summarise(count=n())
 b <- a[a$count!=20,]
 b
 c <- a[a$count==20,1]
@@ -124,7 +124,7 @@ rownames(social_context3b) <- NULL
 northeast_sunroof$State.Abbreviation <- state.abb[match(northeast_sunroof$state_name,state.name)]
 northeast_sunroof$Description <- str_c(northeast_sunroof$region_name,", ",northeast_sunroof$State.Abbreviation)
 northeast_sunroof <- northeast_sunroof[c(-2)]
-northeast_sunroof <- rename(northeast_sunroof, "County.Name"="region_name")
+northeast_sunroof <- dplyr::rename(northeast_sunroof, "County.Name"="region_name")
 northeast_sunroof <- northeast_sunroof[c(26,1,25,2:24)]
 
 solar_data0 <- northeast_sunroof[c(1:7,13:16,22:26)]
@@ -158,7 +158,7 @@ colnames(metrics) <- c("Description",
                        "pct_insured",
                        "prop_crimes",
                        "violent_crimes",
-                       "rural_urban_score",
+                       "net_migration_rate",
                        "pct_diploma",
                        "pct_bachelors",
                        "poverty_rate",
@@ -188,7 +188,7 @@ for(i in 2:261){
   social_context <- rbind(social_context,t_temp1)
 }
 #rename variables to match format
-social_context <- rename(social_context,"Description"="V1")
+social_context <- dplyr::rename(social_context,"Description"="V1")
 rownames(social_context) <- NULL
 social_context <- social_context[c(1,2,4,11,17,18,3,5)]
 
@@ -200,6 +200,7 @@ solar_data2 <- merge(solar_data1,pop_dem_pct)
 solar_data2$pct_installed <- solar_data2$existing_installs_count/solar_data2$count_qualified
 #fix these percentages to match the rest
 solar_data2[c(31:50)]<-solar_data2[c(31:50)]*100
+solar_data2[c(22)]<-solar_data2[c(22)]*100
 #solar_data2b <- solar_data2[solar_data2$existing_installs_count>100,]
 
 ###LIMIT TO VARIABLES THAT WE'LL ACTUALLY USE
@@ -207,6 +208,7 @@ solar_data3 <- solar_data2[c(1,3,4,50,11,19,20,22,24,26,27,35,41,42)]
 
 ###MERGE SOCIAL CONTEXT AS WELL###
 solar_data4 <- merge(solar_data3,social_context)
+solar_data4[c(20)] <- solar_data4[c(20)]*100
 
 #Drop Burleson County, TX doesn't have solar data
 solar_data4 <- solar_data4[-12,]
