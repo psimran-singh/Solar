@@ -7,6 +7,9 @@ library(corrplot)
 library(xtable)
 library(knitr)
 library(ggbiplot)
+library(skimr)
+library(Hmisc)
+library(xlsx)
 
 summary(solar_data4)
 
@@ -21,15 +24,15 @@ colnames(solar_data4b) <- c("Description",
                            "Median KW Potential",
                            "% w/ Health Insurance",
                            "Property Crime Rate",
-                           "Rural/Urban Score",
+                           "Net Migration Rate",
                            "% w/ Bachelor's Degree",
                            "Population Density",
                            "% Children w/ Single Parent",
                            "% Population Age 45-64",
                            "% Female",
                            "% White",
-                           "Income per Capita",
                            "Entrepeneurship Score",
+                           "Income per Capita",
                            "Belief in Science Score",
                            "Risk Taking Score",
                            "Religiosity Score",
@@ -37,17 +40,28 @@ colnames(solar_data4b) <- c("Description",
                            "Employment Rate",
                            "In Texas")
 
-solar_data5 <- solar_data4b[c(4:7,9:20,22)]
+solar_data5 <- solar_data4b[c(4:10,12:20,22)]
 
 ###Some last minute transformations to normalize our variables
-solar_data5b <- solar_data5
-skewness(solar_data5b$"Population Density")
-solar_data5b$"Population Density" <- log(solar_data5$"Population Density")
+solar_data5a <- solar_data5
+skewness(solar_data5a$"Population Density")
+solar_data5a$"log(Population Density)" <- log(solar_data5$"Population Density")
 plot(density(solar_data5b$"Population Density"))
 
-skewness(solar_data5$"% White")
-solar_data5b$"% White" <- (solar_data5$"% White")^(0.5)
-plot(density(solar_data5b$"% White"))
+solar_data5b <- solar_data5a[c(1:6,8:18)]
+
+##Statistic Tables
+# skim1 <- skim(solar_data5a) 
+# texas_data <- solar_data5b[solar_data5b$`In Texas`==TRUE,]
+# cali_data <- solar_data5b[solar_data5b$`In Texas`==FALSE,]
+# skim2 <- skim(texas_data)
+# skim3 <- skim(cali_data)
+# 
+# write.xlsx(skim1, file = "results1a.xlsx")
+# write.xlsx(skim2, file = "results_texas.xlsx")
+# write.xlsx(skim3, file = "results_cali.xlsx")
+
+
 
 # skewness(solar_data5$"% Solar Panel Installed")
 # solar_data5b$"% Solar Panel Installed" <- (solar_data5$"% Solar Panel Installed")
@@ -63,8 +77,8 @@ ggbiplot(pca2)
 
 
 
-pca2 <- principal(solar_data5, rotate="none", nfactors=17, scores=TRUE)
-pca3 <- principal(solar_data5, rotate="varimax", nfactors=17, scores=TRUE)
+pca2 <- principal(solar_data5b, rotate="none", nfactors=17, scores=TRUE)
+pca3 <- principal(solar_data5b, rotate="varimax", nfactors=17, scores=TRUE)
 pca2
 pca3
 
