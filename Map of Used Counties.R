@@ -24,5 +24,14 @@ all_counties %>%
   ggplot(aes(long, lat, group = group, fill = solar_counties)) +
   geom_polygon(color = NA) +
   coord_map(projection = "albers", lat0 = 39, lat1 = 45) +
-  labs(fill = "solar_counties")
-  
+  labs(fill = "solar_counties") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+theme(axis.title.y=element_blank(),
+      axis.text.y=element_blank(),
+      axis.ticks.y=element_blank()) +
+scale_fill_discrete(name = "", labels = c("Not Included", "Included")) +
+theme(legend.position="bottom") +
+ggtitle("Counties Included in Analysis") +
+theme(plot.title = element_text(hjust = 0.5))
