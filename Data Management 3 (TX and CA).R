@@ -208,7 +208,6 @@ solar_data3 <- solar_data2[c(1,3,4,50,11,19,20,22,24,26,27,35,41,42)]
 
 ###MERGE SOCIAL CONTEXT AS WELL###
 solar_data4 <- merge(solar_data3,social_context)
-solar_data4[c(20)] <- solar_data4[c(20)]*100
 
 #Drop Burleson County, TX doesn't have solar data
 solar_data4 <- solar_data4[-12,]
@@ -224,13 +223,17 @@ rm(pop_by_race,
    pop_by_age_sex2,
    pop_by_age_sex3)
 rm(project_sunroof_county,
+   northeast_sunroof,
    solar_data0,
    solar_data1,
+   solar_data2,
    solar_data3)
 rm(social_context0,
    social_context1,
    social_context2,
-   social_context3)
+   social_context3,
+   social_context3b,
+   social_context)
 rm(metrics_dev1,
    metrics_dev2,
    metrics_dev3,
