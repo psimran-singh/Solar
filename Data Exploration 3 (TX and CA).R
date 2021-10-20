@@ -11,6 +11,7 @@ library(skimr)
 library(Hmisc)
 library(xlsx)
 library(GPArotation)
+library(e1071)
 
 ### Check the Initial dataset created in Data Management 3 File
 summary(solar_data4)
@@ -49,24 +50,35 @@ solar_data5 <- solar_data4b[c(4:10,12:20,22)]
 solar_data5a <- solar_data5
 
 #Take the Log of Population Density
-skewness(solar_data5a$"Population Density")
+skewness(solar_data5a$"Population Density") #8.23
 solar_data5a$"log(Population Density)" <- log(solar_data5$"Population Density")
+skewness(solar_data5a$"log(Population Density)") #0.39
 
 plot(density(solar_data5a$"Population Density"))
 plot(density(solar_data5a$`log(Population Density)`))
 
 #Take the Square and Cube Root of % Solar Panel Installed
-skewness(solar_data5a$`% Solar Panel Installed`)
+skewness(solar_data5a$`% Solar Panel Installed`) #1.73
 solar_data5a$"(% Solar Panel Installed)^(1/3)" <- (solar_data5a$"% Solar Panel Installed")^(1/3)
 solar_data5a$"(% Solar Panel Installed)^(1/2)" <- (solar_data5a$"% Solar Panel Installed")^(1/2)
+skewness(solar_data5a$"(% Solar Panel Installed)^(1/3)") #0.51
+skewness(solar_data5a$"(% Solar Panel Installed)^(1/2)") #0.94
+
 
 plot(hist(solar_data5a$`% Solar Panel Installed`))
 plot(hist(solar_data5a$`(% Solar Panel Installed)^(1/2)`))
 plot(hist(solar_data5a$`(% Solar Panel Installed)^(1/3)`))
 
+#%Solar Panel and Pop. Density
+solar_data5og <- solar_data5a[c(1:17)]
+
+#% Solar Panel and Log(Pop. Density)
 solar_data5b <- solar_data5a[c(1:6,8:18)]
 
+#(% Solar Panel)^(1/3) and Log(Pop. Density)
 solar_data5cbrt <- solar_data5a[c(19,2:6,8:18)]
+
+#(% Solar Panel)^(1/2) and Log(Pop. Density)
 solar_data5sqrt <- solar_data5a[c(20,2:6,8:18)]
 
 ### Statistic Tables
@@ -85,55 +97,47 @@ rm(skim1,skim2,skim3)
 
 ### Principal Components Analyses
 
-#Unchanged % Solar Panel Variable
+#Unchanged % Solar Panel and Unchanged Pop. Density Variable
+pca1 <- principal(solar_data5og, rotate="none", nfactors=ncol(solar_data5og), scores=TRUE)
+pca1
+
+#Unchanged % Solar Panel and Log(Pop. Density) Variable
 pca2 <- principal(solar_data5b, rotate="none", nfactors=ncol(solar_data5b), scores=TRUE)
 pca3 <- principal(solar_data5b, rotate="varimax", nfactors=ncol(solar_data5b), scores=TRUE)
 pca2
 pca3
-#Cube Root % Solar Panel Variable
+
+#Cube Root % Solar Panel Variable and Log(Pop. Density) Variable
 pca4 <- principal(solar_data5cbrt, rotate="none", nfactors=ncol(solar_data5c), scores=TRUE)
 pca5 <- principal(solar_data5cbrt, rotate="varimax", nfactors=ncol(solar_data5c), scores=TRUE)
 pca4
 pca5
-#Square Root % Solar Panel Variable
+
+#Square Root % Solar Panel Variable and Log(Pop. Density) Variable
 pca6 <- principal(solar_data5sqrt, rotate="none", nfactors=ncol(solar_data5c), scores=TRUE)
 pca7 <- principal(solar_data5sqrt, rotate="varimax", nfactors=ncol(solar_data5c), scores=TRUE)
+pca8 <- principal(solar_data5sqrt, rotate="oblimin", nfactors=ncol(solar_data5c), scores=TRUE)
 pca6
 pca7
+pca8
+
+solar_dataPCA <- cbind(solar_data4b,pca6$scores)
+solar_dataPCA <- solar_dataPCA[c(1:28)]
 
 #ScreePlots
-qplot(c(1:17), pca4$values) + 
+qplot(c(1:17), pca6$values) + 
   geom_line() + 
   xlab("Principal Component") + 
-  ylab("Variance Explained") +
+  ylab("Variance Explained") +``
   ggtitle("Scree Plot")
 
 
 ### Correlation Matrix
-solar_data5b.cor = cor(solar_data5b)
-solar_data5b.cor
+solar_data5sqrt.cor = cor(solar_data5sqrt)
+solar_data5sqrt.cor
 
-jpeg("CorrPlot2.jpeg", width = 10, height = 10, units = 'in', res = 300)
-corrplot(solar_data5b.cor,
-         type="full",
-         method="shade",
-         addCoef.col = TRUE,
-         tl.cex=1,
-         tl.col="black",
-         number.cex=.75,
-         number.digits=2,
-         sig.level=TRUE,
-         cl.cex=1,
-         tl.srt=45,
-         addgrid.col="black",
-         order="FPC")
-dev.off()
-
-solar_data5c.cor = cor(solar_data5c)
-solar_data5c.cor
-
-jpeg("CorrPlot3.jpeg", width = 10, height = 10, units = 'in', res = 300)
-corrplot(solar_data5c.cor,
+jpeg("CorrPlot4.jpeg", width = 10, height = 10, units = 'in', res = 300)
+corrplot(solar_data5sqrt.cor,
          type="full",
          method="shade",
          addCoef.col = TRUE,
@@ -149,30 +153,32 @@ corrplot(solar_data5c.cor,
 dev.off()
 
 #Factor Analysis
-solar.paf1 <- fa(solar_data5c,nfactors=3)
+parallel<-fa.parallel(solar_data5sqrt, fm='minres', fa='fa',show.legend = FALSE)
+
+solar.paf1 <- fa(solar_data5sqrt,fm="pa")
 solar.paf1
 
-solar.paf2 <- fa(solar_data5c,nfactors=6)
+solar.paf2 <- fa(solar_data5sqrt,fm="pa",nfactors=7)
 solar.paf2
-summary(solar.paf2)
 
-solar.paf3 <- fa(solar_data5c,nfactors=6,rotate="varimax")
+solar.paf3 <- fa(solar_data5sqrt,fm="pa",nfactors=5)
 solar.paf3
 
-qplot(c(1:17), solar.paf2$e.values) + 
-  geom_line() + 
-  xlab("Principal Component") + 
-  ylab("Variance Explained") +
-  ggtitle("Scree Plot")
+solar.paf4 <- fa(solar_data5sqrt,fm="pa",nfactors=4)
+solar.paf4
 
-qplot(c(1:17), solar.paf3$e.values) + 
-  geom_line() + 
-  xlab("Principal Component") + 
-  ylab("Variance Explained") +
-  ggtitle("Scree Plot")
+solar.paf5 <- fa(solar_data5sqrt,fm="pa",nfactors=4,rotate="varimax")
+solar.paf5
 
-#Iterative Approach
+solar.paf5 <- fa(solar_data5sqrt,fm="pa",nfactors=4,rotate="oblimin")
+solar.paf5
+
+solar.paf6 <- fa(solar_data5sqrt,fm="pa",nfactors=3)
+solar.paf6
 
 
-lm <- lm(prop_crimes ~ White.Alone + pct_bachelors + income_per_capita, data = solar_data5)
-summary(lm)
+solar_dataPAF <- cbind(solar_data4b,solar.paf4$scores)
+solar_dataPAF
+
+write.csv(solar_dataPAF,"PAF_Scores.csv")
+write.csv(solar_dataPCA,"PCA_Scores.csv")
