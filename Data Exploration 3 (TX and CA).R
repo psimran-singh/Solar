@@ -12,6 +12,7 @@ library(Hmisc)
 library(xlsx)
 library(GPArotation)
 library(e1071)
+library(ppcor)
 
 ### Check the Initial dataset created in Data Management 3 File
 summary(solar_data4)
@@ -124,6 +125,8 @@ pca8
 solar_dataPCA <- cbind(solar_data4b,pca6$scores)
 solar_dataPCA <- solar_dataPCA[c(1:28)]
 
+
+
 #ScreePlots
 qplot(c(1:17), pca6$values) + 
   geom_line() + 
@@ -135,6 +138,9 @@ qplot(c(1:17), pca6$values) +
 ### Correlation Matrix
 solar_data5sqrt.cor = cor(solar_data5sqrt)
 solar_data5sqrt.cor
+
+solar_data5sqrt.ppcor = pcor(solar_data5sqrt)
+solar_data5sqrt.ppcor
 
 jpeg("CorrPlot4.jpeg", width = 10, height = 10, units = 'in', res = 300)
 corrplot(solar_data5sqrt.cor,
@@ -150,6 +156,22 @@ corrplot(solar_data5sqrt.cor,
          tl.srt=45,
          addgrid.col="black",
          order="FPC")
+dev.off()
+
+jpeg("PCorrPlot.jpeg", width = 10, height = 10, units = 'in', res = 300)
+corrplot(solar_data5sqrt.ppcor$estimate,
+         type="full",
+         method="shade",
+         addCoef.col = TRUE,
+         tl.cex=1,
+         tl.col="black",
+         number.cex=.75,
+         number.digits=2,
+         sig.level=TRUE,
+         cl.cex=1,
+         tl.srt=45,
+         addgrid.col="black",
+         order="AOE")
 dev.off()
 
 #Factor Analysis
@@ -182,3 +204,14 @@ solar_dataPAF
 
 write.csv(solar_dataPAF,"PAF_Scores.csv")
 write.csv(solar_dataPCA,"PCA_Scores.csv")
+
+
+solar_PCALoadings <- pca6$loadings
+write.csv(solar_PCALoadings,"PCA_Loadings.csv")
+
+solar_PCAEigenValues <- pca6$Vaccounted
+write.csv(solar_PCAEigenValues,"PCA_Eigenvalues.csv")
+
+solar_PPCOR <- solar_data5sqrt.ppcor$estimate
+write.csv(solar_PPCOR,"PPCOR.csv")
+

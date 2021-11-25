@@ -248,5 +248,5 @@ rm(t_metrics,
    upper_row,
    namelist,
    namelist2)
-
+rm(a,b,c)
 
